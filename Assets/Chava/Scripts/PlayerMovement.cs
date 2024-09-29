@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    private GameManager gameManager;
     private Rigidbody2D rb;
     private bool facingRight = true;
+    public bool canMove = true;
+    [SerializeField] private float timeStop;
+    [SerializeField] private float pushForce;
 
     [Header ("Valores Movimiento Nadando")]
     [SerializeField] private float upSpeed;
@@ -26,23 +30,27 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        gameManager = FindFirstObjectByType<GameManager>();
         rb = GetComponent<Rigidbody2D>();
+        canMove = true;
     }
 
     void Update()
     {
-
-        if(!isGrounded)
+        if (canMove)
         {
+            if (!isGrounded)
+            {
+                Swim();
+            }
+            else
+            {
+                Walk();
+            }
+
             Swim();
+            FlipCharacter();
         }
-        else
-        {
-            Walk();
-        }
-
-        Swim();
-        FlipCharacter();
         CheckIfGrounded();
     }
 
@@ -132,12 +140,10 @@ public class PlayerMovement : MonoBehaviour
         if (hit.collider != null)
         {
             isGrounded = true;
-            Debug.Log("Tocando el suelo");
         }
         else
         {
             isGrounded = false;
-            Debug.Log("No está tocando el suelo");
         }
 
         // Para visualizar el raycast en la escena
@@ -166,4 +172,38 @@ public class PlayerMovement : MonoBehaviour
         walkSpeed = originalWalkSpeed;
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+
+            Vector2 collisionNormal = collision.contacts[0].normal;
+
+            // Aplicar un empuje en la dirección contraria al choque
+            ApplyPushback(collisionNormal);
+            StartCoroutine(StopMoving());
+        }
+    }
+
+    private void ApplyPushback(Vector2 collisionNormal)
+    {
+        Debug.Log("Esta chocando");
+        // Puedes ajustar este valor según la fuerza que quieras aplicar
+        rb.velocity = collisionNormal * pushForce;  // Empuje en la dirección contraria al choque
+    }
+
+    private IEnumerator StopMoving()
+    {
+        canMove = false;
+        yield return new WaitForSeconds(timeStop);
+        canMove = true;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.CompareTag("EndLevel"))
+        {
+            gameManager.NextStage();
+        }
+    }
 }
