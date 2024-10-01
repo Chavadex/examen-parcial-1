@@ -121,22 +121,21 @@ public class PlayerMovement : MonoBehaviour
 
         
         Vector3 scale = transform.localScale;
-        scale.x *= -1;
+        scale.y *= -1;
         transform.localScale = scale;
     }
 
     private void CheckIfGrounded()
     {
-        // Posición desde donde lanzaremos el raycast (justo debajo del personaje)
+        
         Vector2 rayOrigin = new Vector2(transform.position.x, transform.position.y);
 
-        // Longitud del rayo (ajusta según el tamaño del personaje)
-        //float rayLength = 0.5f;
+        
 
-        // Lanzar el raycast hacia abajo
+        
         RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.down, rayLength, groundLayer);
 
-        // Verificar si el raycast golpea algo en la capa "Piso"
+        
         if (hit.collider != null)
         {
             isGrounded = true;
@@ -146,7 +145,7 @@ public class PlayerMovement : MonoBehaviour
             isGrounded = false;
         }
 
-        // Para visualizar el raycast en la escena
+        
         Debug.DrawRay(rayOrigin, Vector2.down * rayLength, Color.red);
     }
 
@@ -160,14 +159,14 @@ public class PlayerMovement : MonoBehaviour
         float originalSwimSpeed = swimSpeed;
         float originalWalkSpeed = walkSpeed;
 
-        // Cambiar las velocidades
+        
         swimSpeed = newSwimSpeed;
         walkSpeed = newWalkSpeed;
 
-        // Esperar la duración del power-up
+        
         yield return new WaitForSeconds(duration);
 
-        // Restaurar las velocidades originales
+        
         swimSpeed = originalSwimSpeed;
         walkSpeed = originalWalkSpeed;
     }
@@ -179,7 +178,7 @@ public class PlayerMovement : MonoBehaviour
 
             Vector2 collisionNormal = collision.contacts[0].normal;
 
-            // Aplicar un empuje en la dirección contraria al choque
+            
             ApplyPushback(collisionNormal);
             StartCoroutine(StopMoving());
         }
@@ -188,8 +187,8 @@ public class PlayerMovement : MonoBehaviour
     private void ApplyPushback(Vector2 collisionNormal)
     {
         Debug.Log("Esta chocando");
-        // Puedes ajustar este valor según la fuerza que quieras aplicar
-        rb.velocity = collisionNormal * pushForce;  // Empuje en la dirección contraria al choque
+        
+        rb.velocity = collisionNormal * pushForce;  
     }
 
     private IEnumerator StopMoving()

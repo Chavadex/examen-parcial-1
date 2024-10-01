@@ -11,7 +11,7 @@ public class PowerUpPickup : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        // Si hay un sprite definido en el Scriptable Object, asignarlo al SpriteRenderer del objeto
+        
         if (speedPowerUp.powerUpSprite != null)
         {
             spriteRenderer.sprite = speedPowerUp.powerUpSprite;
@@ -24,10 +24,10 @@ public class PowerUpPickup : MonoBehaviour
 
         if (player != null)
         {
-            // Aplica el power-up al jugador
+            
             speedPowerUp.ApplyPowerUp(player);
 
-            // Destruir el objeto power-up después de recogerlo
+           
             Destroy(gameObject);
         }
     }
