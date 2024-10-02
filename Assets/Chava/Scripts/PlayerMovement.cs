@@ -121,7 +121,7 @@ public class PlayerMovement : MonoBehaviour
 
         
         Vector3 scale = transform.localScale;
-        scale.y *= -1;
+        scale.x *= -1;
         transform.localScale = scale;
     }
 
