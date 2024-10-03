@@ -11,6 +11,14 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private string sceneName;
 
+    private void Start()
+    {
+        Time.timeScale = 1;
+    }
+    private void Update()
+    {
+        SetPause();
+    }
     private void SetPause()
     {
         if(Input.GetKeyDown(KeyCode.P))
@@ -20,9 +28,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void Resume()
+    {
+        Time.timeScale = 1;
+        pausePanel.SetActive(false);
+    }
+
     public void MainMenu()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("Main Menu");
     }
 
     public void Retry()
@@ -37,5 +51,10 @@ public class GameManager : MonoBehaviour
 
         SceneManager.LoadScene(actualScene + 1);
 
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 }

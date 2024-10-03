@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float swimSpeed = 2.0f;
     [SerializeField] private float swimAcceleration = 1.0f;
     [SerializeField] private float floatDownSpeed = 1.0f;
+    [SerializeField] private float newUpSpeed = 1.0f;
+    [SerializeField] private float newDownSpeed = 1.0f;
 
     [Header("Valores Movmiento Caminando")]
 
@@ -27,12 +30,18 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float walkSpeed;
     [SerializeField] private float jumpForce;
 
+    [SerializeField] private int boosts;
+    [SerializeField] private TextMeshProUGUI boostText;
+
 
     void Start()
     {
         gameManager = FindFirstObjectByType<GameManager>();
         rb = GetComponent<Rigidbody2D>();
         canMove = true;
+
+        boosts = PlayerPrefs.GetInt("boost", 5);
+        
     }
 
     void Update()
@@ -52,6 +61,13 @@ public class PlayerMovement : MonoBehaviour
             FlipCharacter();
         }
         CheckIfGrounded();
+
+        AddUpSpeed();
+
+        boostText.text = boosts.ToString();
+
+        
+        
     }
 
     private void Swim()
@@ -204,5 +220,32 @@ public class PlayerMovement : MonoBehaviour
         {
             gameManager.NextStage();
         }
+    }
+
+    public void AddUpSpeed()
+    {
+        if(Input.GetKeyDown(KeyCode.LeftShift) && boosts > 0)
+        {
+            StartCoroutine(UpSpeedModifier());
+            boosts -= 1;
+            PlayerPrefs.SetInt("boost", boosts);
+        }
+    }
+
+    private IEnumerator UpSpeedModifier()
+    {
+        float originalUpSwimSpeed = upSpeed;
+        float originalDownWalkSpeed = downSpeed;
+
+
+        upSpeed = newUpSpeed;
+        downSpeed = newDownSpeed;
+
+
+        yield return new WaitForSeconds(2.5f);
+
+
+        upSpeed = originalUpSwimSpeed;
+        downSpeed = originalDownWalkSpeed;
     }
 }

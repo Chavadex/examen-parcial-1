@@ -27,4 +27,9 @@ public class MenuManager : MonoBehaviour
         string newUsername = PlayerPrefs.GetString("UserName", "");
         Debug.Log(newUsername);
     }
+
+    public void DeleteInfo()
+    {
+        PlayerPrefs.DeleteAll();
+    }
 }
