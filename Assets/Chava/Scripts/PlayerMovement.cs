@@ -5,6 +5,8 @@ using TMPro;
 
 public class PlayerMovement : MonoBehaviour
 {
+    private Animator anim;
+    [SerializeField] bool isMoving;
     private GameManager gameManager;
     private Rigidbody2D rb;
     private bool facingRight = true;
@@ -36,6 +38,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        anim = GetComponent<Animator>();
         gameManager = FindFirstObjectByType<GameManager>();
         rb = GetComponent<Rigidbody2D>();
         canMove = true;
@@ -66,6 +69,14 @@ public class PlayerMovement : MonoBehaviour
 
         boostText.text = boosts.ToString();
 
+        float actualSpeed = rb.velocity.x;
+
+        bool isGroundAnimation = isGrounded;
+
+      
+
+        anim.SetFloat("speed", actualSpeed);
+        anim.SetBool("isGroundAnim", isGroundAnimation);
         
         
     }
@@ -102,14 +113,17 @@ public class PlayerMovement : MonoBehaviour
         if (horizontalInput > 0) // Mover a la derecha
         {
             rb.velocity = new Vector2(walkSpeed, rb.velocity.y);
+            isMoving = true;
         }
         else if (horizontalInput < 0) // Mover a la izquierda
         {
             rb.velocity = new Vector2(-walkSpeed, rb.velocity.y);
+            isMoving = true;
         }
         else // Dejar de moverse
         {
             rb.velocity = new Vector2(0, rb.velocity.y);
+            isMoving = false;
         }
     }
 
